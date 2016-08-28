@@ -40,3 +40,32 @@ public:
         return table[curind][preind];
     }
 };
+
+// new dp solutions, but the discussion in lc has better solutions
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        if (nums.size() == 0) return 0;
+        vector<int> table(nums.size(), -1);
+        table[0] = 1;
+        
+        int res = -1;
+        for (int i = 0; i < nums.size(); ++i) {
+            res = res > helper(nums, i, table) ? res : helper(nums, i, table);
+        }
+        return res;
+    }
+    
+    int helper(vector<int>& nums, int curind, vector<int>& table) {
+        if (table[curind] != -1) return table[curind];
+        
+        int res = 1;
+        for (int i = 0; i < curind; ++i) {
+            if (nums[curind] > nums[i]) {
+                res = res > (helper(nums, i, table) + 1) ? res : (helper(nums, i, table) + 1);
+            }
+        }
+        table[curind] = res;
+        return table[curind];
+    }
+};
