@@ -1,0 +1,4 @@
+from: https://www.topcoder.com/community/data-science/data-science-tutorials/dynamic-programming-from-novice-to-advanced/
+
+1. A DP is an algorithmic technique which is usually based on a recurrent formula and one (or some) starting states. A sub-solution of the problem is constructed from previously found ones.
+  So, the DP needs two basic components, state(s) and recurrent formulas of the state(s).
