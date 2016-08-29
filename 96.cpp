@@ -1,3 +1,6 @@
+// check https://discuss.leetcode.com/topic/8398/dp-solution-in-6-lines-with-explanation-f-i-n-g-i-1-g-n-i
+// This solution is simpler and more pretty
+
 class Solution {
 public:
     int numTrees(int n) {
