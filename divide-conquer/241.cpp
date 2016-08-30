@@ -1,3 +1,5 @@
+// Get more familiar with string operation and functions.
+
 class Solution {
 public:
     vector<int> diffWaysToCompute(string input) {
