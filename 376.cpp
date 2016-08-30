@@ -1,3 +1,49 @@
+// From the discussion in lc
+class Solution {
+public:
+    int wiggleMaxLength(vector<int>& nums) {
+        int n = nums.size();
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        
+        bool up;
+        int i;
+        for (i = 1; i < n; ++i) {
+            if (nums[i] > nums[0]) {
+                up = true;
+                break;
+            }
+            else if (nums[i] < nums[0]) {
+                up = false;
+                break;
+            }
+        }
+        int start = i;
+        int size = 1;
+        for (i = start; i < n; ++i) {
+            if (up) {
+                if (nums[i] > nums[i-1]) {
+                    ++size;
+                    up = !up;
+                }
+                else {
+                    continue;
+                }
+            }
+            else {
+                if (nums[i] < nums[i-1]) {
+                    ++size;
+                    up = !up;
+                }
+                else {
+                    continue;
+                }
+            }
+        }
+        return size;
+    }
+};
+
 // This is my own solution, O(n^2) time complexity
 
 class Solution {
