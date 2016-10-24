@@ -1,3 +1,28 @@
+// hash map is a good idea
+
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        unordered_set<int> set1, set2;
+        
+        for (int i = 0; i < nums1.size(); ++i) {
+            set1.insert(nums1[i]);
+        }
+        for (int i = 0; i < nums2.size(); ++i) {
+            set2.insert(nums2[i]);
+        }
+        
+        vector<int> res;
+        for (auto it = set1.begin(); it != set1.end(); ++it) {
+            if (set2.find(*it) != set2.end()) {
+                res.push_back(*it);
+            }
+        }
+        
+        return res;
+    }
+};
+
 class Solution {
 public:
     vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
