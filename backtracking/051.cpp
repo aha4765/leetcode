@@ -25,6 +25,7 @@ public:
     int helper(vector<vector<vector<int>>>& res, vector<vector<int>>& cur, int currow, int n) {
         if (currow == n) {
             res.push_back(cur);
+            return 0;
         }
         for (int i = 0; i < n; ++i) {
             if (isvalid(cur, currow, i, n)) {
