@@ -2,6 +2,8 @@ http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=207508&extra=page%3
 
  largest size of island instead of number of islands (LC 200)
  
+ // complexity should be O(N^2).
+ 
  int largestisland(vector<vector<char>>& grids) {
   int xsize = grids.size();
   int ysize = grids[0].size();
@@ -37,3 +39,59 @@ http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=207508&extra=page%3
   }
   return 0;
  }
+ 
+ http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=208768&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+ 
+ 1. 问题1：Minimun depth of binary tree.
+ https://leetcode.com/problems/minimum-depth-of-binary-tree/
+ 
+ class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if (root == nullptr) return 0;
+        return findmin(root);
+    }
+    
+    int findmin(TreeNode* node) {
+        if (node == nullptr) return INT_MAX;
+        if ((node->left == nullptr) && (node->right == nullptr)) return 1;
+        return min(findmin(node->left), findmin(node->right)) + 1;
+    }
+};
+ 
+2. 问题2: Binary tree vertical order traveral. follow up 是如果树很不平衡怎么办。BFS vs DFS.
+http://www.geeksforgeeks.org/print-binary-tree-vertical-order/
+
+struct TreeNode {
+ TreeNode* left;
+ TreeNode* right;
+ int val;
+};
+
+vector<vector<int>> verticaltraversal(TreeNode* root) {
+ vector<vector<int>> res;
+ map<int, vector<int>> vmap;
+ dfs(vmap, root, 0);
+ for (auto it = res.begin(); it != res.end(); ++it) {
+  res.push_back(it->second);
+ }
+ return res;
+}
+
+int dfs(map<int, vector<int>>& res, TreeNode* root, int col) {
+ if (root == nullptr) return 0;
+ if (res.find(col) != res.end()) {
+  res[col].push_back(root->val);
+ }
+ else {
+  vector<int> tempvec;
+  tempvec.push_back(root->val);
+  res[col] = tempvec;
+ }
+ dfs(res, root->left, col-1);
+ dfs(res, root->left, col+1);
+ return 0;
+}
+
+time complexity O(N*log(N))
+Space complexity O(N)
