@@ -134,6 +134,50 @@ int maxroot(vector<Interval>& interval) {
  }
 }
 
+// To return the number of rooms in each interval
+unordered_map<int, vector<Interval>> maxroot(vector<Interval>& interval) {
+ vector<int> start, end;
+ int size = interval.size();
+ for (int i = 0; i < interval.size(); ++i) {
+  start.push_back(interval[i].start);
+  end.push_back(interval[i].end);
+ }
+  
+  sort(start.begin(), start.end());
+  sort(end.begin(), end.end());
+  
+  unordered_map<int, vector<Interval>> res;
+  int endptr = 0, startptr = 0;
+  int res = 0;
+  // end[endptr] always denote the first available meeting root allocated
+  int room = 0; // The number of rooms used after pretime until now
+  int starttime, endtime, pretime = -1;
+  while ((startptr < size) && (endptr < size)) {
+   if (start[startptr] < end[endptr]) {
+    if (pre != -1) {
+     res[room].push_back(Interval(pretime, start[startptr]));
+    }
+    room++;
+    pretime = start[startptr];
+    startptr++;
+   }
+   else {
+    res[room].push_back(Interval(pretime, end[endptr]));
+    room--;
+    pretime = end[endptr];
+    endptr++;
+   }
+  }
+  
+  for (; endptr < size; ++endptr) {
+   res[room].push_back(Interval(pretime, end[endptr]));
+   room--;
+   pretime = end[endptr];
+   endptr++;
+  }
+  return res;
+}
+
 Time Complexity O(nlogn)
 
 2. use a min priority queue
@@ -215,3 +259,86 @@ int dotproduct(vector<Element>& a, vector<Element>& b) {
 }
 
 Time complexity O(n*logn) n is max(a.size(), b.size())
+
+Given an array of task and k wait time for which a repeated task needs to wait k time to execute again. return overall unit time it will take to complete all the task. 
+Example: 
+1. A B C D and k = 3 
+ans: 4 (execute order A B C D) 
+2. A B A D and k = 3 
+ans: 6 (execute order A B . . A D) 
+3. A A A A and k =3 
+ans: 13 (A . . . A . . . A . . . A) 
+4. A B C A C B D A and k = 4 
+
+int tasktime(vector<char>& tasks, int k) {
+ unorderd_map<char, int> cooldown;
+ int size = tasks.size();
+ int time = 0;
+ for (int i = 0; i < size; ++i) {
+  if (cooldown.count(tasks[i]) != 0) {
+   if (time - cooldown[tasks[i]] <= k) {
+    time = cooldown[tasks[i]] + k + 1;
+   }
+   else {
+    time++;
+   }
+   cooldown[tasks[i]] = time;
+  }
+  else {
+   time++;
+   cooldown[tasks[i]] = time;
+  }
+ }
+ return time;
+}
+
+Time complexity O(N)
+Memory complexity O(N)
+
+If the tasks can be rearranged
+// Use greedy method
+
+struct Work{
+ char task;
+ int occur;
+ Work(char t, int o) 
+ : task(t), occur(o)
+ {}
+};
+vector<char> rearrangetask(vector<char>& tasks, int k) {
+ unordered_map<char, int> freq;
+ int size = tasks.size();
+ for (char t : tasks) {
+  if (freq.count(t) == 0) {
+   freq[t] = 1;
+  }
+  else {
+   freq[t]++;
+  }
+ }
+ 
+ // have a max heap
+ priority_queue<Work, vector<Work>, [&](Work a, Work b){return a.occur < b.occur;}> heap;
+ for (auto it = freq.begin(); it != freq.end(); ++it) {
+  heap.push(Work(it->first, it->second));
+ }
+ 
+ vector<char> newwork(size, 0);
+ while (!heap.empty()) {
+  // find first available pos
+  int pos = 0;
+  while ((pos < size) && (newwork[pos] != 0)) {
+   pos++;
+  }
+  Work curwork = heap.top();
+  for (; pos < size; pos += (k+1)) {
+   newwork[pos] = curwork.task;
+   curwork.occur--;
+  }
+  heap.pop();
+  if (curwor.occur > 0) {
+   heap.push(curwork);
+  }
+ }
+ return newwork;
+}
