@@ -54,3 +54,37 @@ int levelprint(TreeNode* root) {
   }
   return 0;
 }
+
+2. random return number according to weight
+int randnum(vector<int>& nums, vector<int>& weights) {
+  int size = nums.size();
+  vector<int> presum(size, 0);
+  presum[0] = weights[0];
+  for (int i = 1; i < size; ++i) {
+    presum[i] = presum[i-1] + weights[i];
+  }
+  // generate a number between [1, presum[size-1]], number locate in (presum[i-1], presum[i]] means nums[i], where 
+  // we assume presum[-1] to be 0.
+  srand(time(nullptr));
+  int rnum = rand()%presum[size-1]+1;
+  int ind = binarysearch(presum, rnum);
+  return nums[ind];
+}
+
+int binarysearch(vector<int>& nums, int val) {
+  int size = nums.size();
+  int start = 0, end = size - 1;
+  while (start <= end) {
+    int median = (start + end)/2;
+    if (nums[median] == val) {
+      return media;
+    }
+    else if (nums[median] > val) {
+      end = median - 1;
+    }
+    else {
+      start = median + 1;
+    }
+  }
+  return start;
+}
