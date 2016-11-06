@@ -175,3 +175,43 @@ int maxroot(vector<Interval>& interval) {
   }
   return true;
 }
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=208871&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+1. compute the dot product of two vectors
+int dotproduct(vector<int>& a, vector<int>& b) {
+ int res = 0;
+ for (int i = 0; i < a.size(); ++i) {
+  res += a[i]*b[i];
+  return res;
+ }
+}
+ 
+// if the array is sparse, then store index and val in a struct
+struct Element{
+ int pos;
+ int val;
+};
+
+int dotproduct(vector<Element>& a, vector<Element>& b) {
+ int res = 0;
+ sort(a.begin(), a.end(), [&](Element a, Element b){return a.pos < b.pos;});
+ sort(b.begin(), b.end(), [&](Element a, Element b){return a.pos < b.pos;});
+ int asize = a.size();
+ int bsize = b.size();
+ int ai = 0, bi = 0;
+ while ((ai < asize) && (bi < bsize)) {
+  if (a[ai].pos == b[bi].pos) {
+   res += a[ai].val*b[bi].val;
+  }
+  else if (a[ai].pos < b[bi].pos) {
+   ai++;
+  }
+  else {
+   bi++;
+  }
+ }
+ return res;
+}
+
+Time complexity O(n*logn) n is max(a.size(), b.size())
