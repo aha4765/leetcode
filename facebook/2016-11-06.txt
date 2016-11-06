@@ -88,3 +88,64 @@ int binarysearch(vector<int>& nums, int val) {
   }
   return start;
 }
+
+10. Regular Expression Matching
+
+'.' Matches any single character.
+'*' Matches zero or more of the preceding element.
+
+The matching should cover the entire input string (not partial).
+
+The function prototype should be:
+bool isMatch(const char *s, const char *p)
+
+Some examples:
+isMatch("aa","a") → false
+isMatch("aa","aa") → true
+isMatch("aaa","aa") → false
+isMatch("aa", "a*") → true
+isMatch("aa", ".*") → true
+isMatch("ab", ".*") → true
+isMatch("aab", "c*a*b") → true
+
+// dynamic programming
+// f[i][j] is 1 if s[0...i-1] matches p[0...j-1]
+// f[0][0] is 1, since empty matches empty
+// f[i][0] is 0, since p is empty for i >= 1
+// f[0][1] is 0
+// f[0][j] is 1 if f[0][j-2] is 1 and p[j-1] is '*' for j >= 2
+// f[i][j] is 1 if p[j-1] not *, then f[i-1][j-1] == 1 and p[j-1] == '.' || p[j-1] == s[i-1]
+//              if p[j-1]  is *, then f[i][j-2] == 1
+//                                 or f[i-1][j] == 1 && p[j-2] == '.' || p[j-2] == s[i-1]
+bool isMatch(string s, string p) {
+  int ssize = s.size();
+  int psize = p.size();
+  
+  vector<vector<int>> match(ssize+1, vector<int>(psize+1, 0));
+  
+  match[0][0] = 1;
+  for (int j = 2; j <= psize; ++j) {
+    if ((p[j-1] == '*') && (match[0][j-2] == 1)) {
+      match[0][j] = 1;
+    }
+  }
+  for (int i = 1; i <= ssize; ++i) {
+    for (int j = 1; j <= psize; ++j) {
+      if ((p[j-1] != '*') && (match[i-1][j-1] == 1) && (p[j-1] == '.' || p[j-1] == s[i-1])) {
+        match[i][j] = 1;
+      }
+      if (
+          (p[j-1] == '*') && 
+          (
+              (match[i][j-2] == 1) || 
+              ((match[i-1][j] == 1) && (p[j-2] == '.' || p[j-2] == s[i-1]))
+          )
+         ){
+        match[i][j] = 1;
+      }
+    }
+  }
+  
+  return match[ssize][psize] == 1;
+}
+
