@@ -149,3 +149,30 @@ bool isMatch(string s, string p) {
   return match[ssize][psize] == 1;
 }
 
+// Use recursive
+// help(string& s, string& p, int si, int pi) returns true if s[0..si-1] and p[0..pi-1] match
+bool help(string& s, string& p, int si, int pi) {
+  if ((si == 0) && (pi == 0)) {
+    return true;
+  }
+  
+  if ((si == 0) && (pi >= 2)) {
+    return help(s, p, si, pi-2) && (p[pi-1] == '*');
+  }
+  
+  if ((si >=1) && (pi >=1)) {
+    if (p[pi-1] != '*') {
+      return help(s, p, si-1, pi-1) && (s[si-1] == p[pi-1] || p[pi-1] == '.');
+    }
+    else {
+      return help(s, p, si, pi-2) || (help(s, p, si-1, pi) && ((s[si-1] == p[pi-2]) || (p[pi-2] == '.')));
+    }
+  }
+  return false;
+}
+
+bool isMatch(string s, string p) {
+  int ssize = s.size();
+  int psize = p.size();
+  return help(s, p, ssize, psize);
+}
