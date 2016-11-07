@@ -203,3 +203,135 @@ int dfs(TreeNode* node, vector<string>& res, string path) {
   }
   return 0;
 }
+
+http://www.1point3acres.com/bbs/thread-208434-1-1.html
+BST 的 in-order iterator. 要写的function有 next() 和 all(), next 一次return 下一个node； all() return所以剩下的。follow up是 改成 preorder 和 postorder
+
+//In order iterator
+struct TreeNode {
+  int val;
+  TreeNode* left;
+  TreeNode* right;
+};
+
+// The code for in-order traversal is 
+// visit(root->left), visit root, visit root->right
+
+class Iterator {
+  public:
+    Iterator(TreeNode* root) {
+      while (root != nullptr) {
+        st.push(root);
+        root = root->left;
+      }
+    }
+  
+    TreeNode* next() {
+      if (st.empty()) return nullptr;
+      TreeNode* cur = st.top();
+      st.pop();
+      TreeNode* temp = cur->right;
+      while (temp != nullptr) {
+        st.push(temp);
+        temp = temp->left;
+      }
+      return cur;
+    }
+    vector<TreeNode*> all() {
+      vector<TreeNode*> res;
+      TreeNode* cur;
+      while ((cur = next()) != nullptr) {
+        res.push_back(cur);
+      }
+      return res;
+    }
+    
+  private:
+    stack<TreeNode*> st;
+};
+
+// The code for pre-order traversal is 
+// visit root, visit(root->left), visit root->right
+
+class Iterator {
+  public:
+    Iterator(TreeNode* root) {
+      if (root != nullptr) {
+        st.push(root);
+      }
+    }
+  
+    TreeNode* next() {
+      if (st.empty()) return nullptr;
+      TreeNode* cur = st.top();
+      st.pop();
+      if (cur->right != nullptr) {
+        st.push(cur->right);
+      }
+      if (cur->left != nullptr) {
+        st.push(cur->left);
+      }
+      return cur;
+    }
+    vector<TreeNode*> all() {
+      vector<TreeNode*> res;
+      TreeNode* cur;
+      while ((cur = next()) != nullptr) {
+        res.push_back(cur);
+      }
+      return res;
+    }
+    
+  private:
+    stack<TreeNode*> st;
+};
+
+// The code for pre-order traversal is 
+// visit visit(root->left), visit root->right, root
+
+class Iterator {
+  public:
+    Iterator(TreeNode* root) {
+      while (root != nullptr) {
+        st.push(root);
+        if (root->left) {
+          root = root->left;
+        }
+        else if (root->right) {
+          root = root->right;
+        }
+      }
+    }
+  
+    TreeNode* next() {
+      if (st.empty()) return nullptr;
+      TreeNode* cur = st.top();
+      st.pop();
+      if (!st.empty()) {
+        if (cur == st.top()->left) {
+          TreeNode* temp = st.top()->right;
+          while (temp != nullptr) {
+            st.push(temp);
+            if (temp->left) {
+              temp = temp->left;
+            }
+            else if (temp->right) {
+              temp = temp->right;
+            }
+          }
+        }
+      }
+      return cur;
+    }
+    vector<TreeNode*> all() {
+      vector<TreeNode*> res;
+      TreeNode* cur;
+      while ((cur = next()) != nullptr) {
+        res.push_back(cur);
+      }
+      return res;
+    }
+    
+  private:
+    stack<TreeNode*> st;
+};
