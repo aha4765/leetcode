@@ -1,0 +1,67 @@
+/*
+
+Question) Given a simple graph, determine if it's bipartite. A bipartite graph is a set of graph vertices decomposed into two disjoint sets such that no two graph vertices within the same set are adjacent.
+
+Example:
+--------
+    x----y
+    |    |
+    z----w
+Bipartite: {x, w} & {y, z}
+
+      x
+     / \
+    y---z         
+Not bipartite
+
+*/
+
+struct Node {
+  int val;
+  list<Node*>  neighbour;
+};
+
+// use a vector<Node*> to include the nodes in the graph
+bool isbipartite(vector<Node*>& graph) {
+  unordered_set<Node*> set0, set1;  // whether we are considering set0 or not
+  unorderd_map<Node*, bool> visited;
+  bool isset0 = true;
+  for (int i = 0; i < graph.size(); ++i) {
+    // visted
+    if (visited[graph[i]] == true) {
+      continue;
+    }
+    stack<Node*> st;
+    st.push(graph[i]);
+    while (!st.empty()) {
+      Node* curnode = st.top();
+      st.pop();    
+      if (visited[curnode] == true) {
+        continue;
+      }
+      visited[curnode] = true;
+      // adding to set0
+      if (isset0) {
+        for (Node* tempnb : curnode->neighbour) {
+          st.push(tempnb);
+          if (set1.find(tempnb) != set1.end()) {
+            return false;
+          }
+        }
+        set0.insert(curnode);
+        isset0 = false;
+      }
+      else {
+        for (Node* tempnb : curnode->neighbour) {
+          st.push(tempnb);
+          if (set0.find(tempnb) != set0.end()) {
+            return false;
+          }
+        }
+        set1.insert(curnode);
+        isset0 = true;
+      }
+    }
+  }
+  return true;
+}
