@@ -1,4 +1,4 @@
-#49
+#71
 
 1. 给一个 二叉树 ， 求最深节点的最小公共父节点。 (BST LCA with deepest leaf)
 
@@ -3374,7 +3374,7 @@ class SortPartialSortedArray {
 
 62. 
 1. LC 191 Number of 1 Bits.
-2. 给2D平面上的N个点，求离原点最近的K个点
+2.                                          
 
 #Number of One Bits(bit, number of 1)
 // x & (x - 1) helps to remove the right most 1 of the x
