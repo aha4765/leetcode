@@ -1,0 +1,87 @@
+有一个数组，里面有0和非0元素，要求把所有非0元素移动到数组的前端，并返回非0元素的个数，非零元素顺序随意。非零元素之后数组有什么我们不关心。要求最小化写入次数。
+
+int movezero(vector<int>& nums) {
+  int size = nums.size();
+  int i = 0, j = size - 1;
+  while (i < j) {
+    while ((nums[i] != 0) && (i < j)) {
+      ++i;
+    }
+    
+    while ((nums[j] == 0) && (i < j)) {
+      --j;
+    }
+    
+    if (i < j) {
+      nums[i] = num[j];
+      i++;
+      j--;
+    }
+  }
+  if (nums[j] == 0) {
+    return j;
+  }
+  else {
+    return j+1;
+  }
+}
+
+http://www.1point3acres.com/bbs/thread-109284-1-1.html
+
+bool findthief(vector<int>& seq, int n) {
+  for (int i = 0; i < n; ++i) {
+    if (!dfs(seq, n, 0, i)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool dfs(vector<int>& seq, int n, int step, int pos) {
+  if (step == seq.size()) return false;
+  if (seq[step] == pos) return true;
+  bool left = true, right =true;
+  if (pos > 0) {
+    left = dfs(seq, n, step+1, pos-1);
+  }
+  if (pos < n-1) {
+    right = dfs(seq, n, step+1, pos+1);
+  }
+  
+  if (left && right) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+use dp:
+// survive[i][p] true if can survivie on day i in pos p
+// survive[i][p] is true if survive[i-1][p-1] or survive[i-1][p+1] is true and seq[i] != p
+bool findthief(vector<int>& seq, int n) {
+  int size = seq.size();
+  vector<vector<bool>> survive(2, vector<int>(n, true));
+  survive[0][seq[0]] = false;
+  for (int i = 1; i < size; ++i) {
+    for (int p = 0; p < n; ++p)
+      if (p == 0) {
+        survive[1][p] = survive[0][p+1] && seq[i] != p;
+      }
+      else if (p == n-1) {
+        survive[1][p] = survive[0][p-1] && seq[i] != p;
+      }
+      else {
+        survive[1][p] = survive[0][p-1] && survive[0][p+1] && seq[i] != p;
+      }
+    }
+    // copy survive[1] to survive[0];
+  }
+  
+  for (auto temp : survivie[0]) {
+    if (temp) {
+      return false;
+    }
+  }
+  return true;
+}
