@@ -1,0 +1,94 @@
+Longest Palindromic Substring
+
+http://www.geeksforgeeks.org/longest-palindrome-substring-set-1/
+
+DP
+
+// table[i][j] = true if str[i...j] is palindrom
+// table[i][i] = true, table[i][i-1] is true
+// table[i][j] = true if  table[i+1][j-1] is true && str[i] == str[j]
+string longestPalin(string& str) {
+  int start = 0, end = 0;
+  int len = 1;
+  int size = str.size();
+  vector<vector<int>> table(size, vector<int>(size, false));
+  for (int i = 0; i < size; ++i) {
+    table[i][i] = true;
+  }
+  for (int i = 1; i < size; ++i) {
+    table[i][i-1] = true;
+  }
+  
+  for (int i = size-2; i >= 0; i--) {
+    for (int j = i+1; j < size; ++j) {
+      if (table[i+1][j-1] && (str[i] == str[j])) {
+        table[i][j] = true;
+        if (len < (j-i+1)) {
+          len = j-i+1;
+          start = i;
+          end = j;
+        }
+      }
+    }
+  }
+  return str.substr(i, len);
+}
+
+interval [startTime, stoptime)   ----integral  time stamps. more info on 1point3acres.com
+给这样的一串区间 I1, I2......In  
+找出 一个 time stamp  出现在interval的次数最多。
+startTime <= t< stopTime 代表这个数在区间里面出现过。
+
+example：  [1,3),  [2, 7),   [4,  8),   [5, 9)
+5和6各出现了三次， 所以答案返回5，6。
+
+struct Interval {
+  int start;
+  int end;
+  Interval(int s, int e) 
+  : start(s), end(e){
+  }
+};
+vector<int> overlap(vector<Interval>& interval) {
+  int size = interval.size();
+  vector<int> start, end;
+  for (auto temp : interval) {
+    start.push_back(temp.start);
+    end.push_back(temp.end);
+  }
+  sort(start.begin(), start.end());
+  sort(end.begin(), end.end());
+  
+  int count = 0, maxcount = -1;
+  int sp = 0, ep = 0;
+  int curstart, curend;
+  unordered_map<int, vector<int>> mp;
+  while (sp < size && ep < size) {
+    if (start[sp] < end[ep]) {
+      count++;
+      maxcount = max(maxcount, count);
+      curstart = start[sp];
+      sp++;
+    }
+    else {
+      curend = end[ep];
+      if (count == maxcount) {
+        mp[count].push_back(Interval(curstart, curend));
+      }
+      count--;
+      ep++;
+    }
+  }
+  
+  curend = end[ep];
+  if (count == maxcount) {
+    mp[count].push_back(Interval(curstart, curend));
+  }
+  vector<int> res;
+  for (auto temp : mp[maxcount]) {
+    for (int i = temp.start; i < temp.end; ++i) {
+      res.push_back(i);
+    }
+  }
+  return res;
+}
