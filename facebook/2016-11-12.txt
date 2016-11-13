@@ -46,18 +46,35 @@ int amazenum(vector<int>& nums) {
 }
 
 Merge K sorted List.
-struct
+struct Element {
+  int val;
+  int arr;
+  Element(int v, int a) 
+  : val(v), arr(a){
+  }
+};
 vector<int> merge(vector<vector<int>>& nums) {
   int arrnum = nums.size();
   vector<int> res;
-  vector<int> indarr(arrnum, 1);
-  priority_queue<int, vector<int>, greater<int>> pq;
+  vector<int> indarr(arrnum, 0);
+  priority_queue<Element, vector<Element>, [&](Element a, Element b){return a.val > b.val;}> pq;
   
   for (int i = 0; i < arrnum, ++i) {
-    pq.push(nums[i][0]);
+    pq.push(Element(nums[i][0], i));
   }
   int arrcnt = arrnum;
   while (arrcnt != 0) {
-    
+    int curval = pq.top().val;
+    int arrind = pq.top().arr;
+    res.push_back(curval);
+    pq.pop();
+    indarr[arrind]++;
+    if (indarr[arrind] >= nums[arrind].size()) {
+      arrcnt--;
+    }
+    else {
+      pq.push(nums[arrind][indarr[arrind]]);
+    }
   }
+  return res;
 }
