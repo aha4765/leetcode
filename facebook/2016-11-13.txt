@@ -1,0 +1,235 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210154&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+windows里面的扫雷，给一个h,w和m. 生成一个高度h，宽度w，总共m颗雷的矩阵。要求m颗雷随机分布。
+
+vector<vector<bool>> bomb(int h, int w, int m) {
+  vector<vector<bool>> res(h, vector<bool>(w, false));
+  // generate m int in [0, h*w-1], the index will be res[num/w][num%w].
+  vector<int> index(m, -1);
+  for (int i = 0; i < m; ++i) {
+    index[i] = i;
+  }
+  
+  srand(time());
+  
+  for (int i = m; i < h*w; ++i) {
+    int rnum = rand()%(i+1);
+    if (rnum < m) {
+      index[rnum] = i;
+    }
+  }
+  
+  for (int i = 0; i < m; ++i) {
+    res[index[i]/w][index[i]%w] = true;
+  }
+  return true;
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210377&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+Rat maze
+
+bool canreach(vector<vector<int>>& maze) {
+  return dfs(maze, 0, 0);
+}
+
+bool dfs(vector<vector<int>>& maze, int x, int y) {
+  if ((x == maze.size()-1) && (y == maze[0].size()-1)) return true;
+  bool down = false, forward = false;
+  if ((x < maze.size()-1) && (maze[x+1][y] == 1)) {
+    down = dfs(maze, x+1, y);
+  }
+  if ((y < maze[0].size()-1) && (maze[x][y+1] == 1)) {
+    forward = dfs(maze, x, y+1);
+  }
+  
+  return down || forward;
+}
+
+permutation with distinct numbers
+vector<vector<int>> permutation(vector<int>& nums) {
+  
+}
+
+int bt(vector<vector<int>>& res, vector<int>& nums, vector<int>& cur, int begin) {
+  if (begin == nums.size()) {
+    res.push_back(cur);
+    return 0;
+  }
+  
+  cur.push_back(nums[begin]);
+  for (int i = 0; i < cur.size(); ++i) {
+    swap(cur[i], cur[cur.size()-1]);
+    bt(res, nums, cur, begin+1);
+    swap(cur[i], cur[cur.size()-1]);
+  }
+  return 0;
+}
+
+int bt(vector<vector<int>>& res, vector<int>& nums, vector<int>& cur, vector<int>& used) {
+  if (cur.size() == nums.size()) {
+    res.push_back(cur);
+    return 0;
+  }
+  
+  for (int i = 0; i < nums.size(); ++i) {
+    if (used[i] == 1) {
+      continue;
+    }
+    cur.push_back(nums[i]);
+    used[i] = 1;
+    bt(res, nums, cur, used);
+    used[i] = 0;
+    cur.pop_back();
+  }
+  return 0;
+}
+
+// if with duplicates
+int bt(vector<vector<int>>& res, vector<int>& nums, vector<int>& cur, vector<int>& used) {
+  if (cur.size() == nums.size()) {
+    res.push_back(cur);
+    return 0;
+  }
+  
+  for (int i = 0; i < nums.size(); ++i) {
+    if (used[i] == 1) {
+      continue;
+    }
+    if ((i != 0) && (nums[i] == nums[i-1]) && (used[i-1] == 0)) continue;
+    cur.push_back(nums[i]);
+    used[i] = 1;
+    bt(res, nums, cur, used);
+    used[i] = 0;
+    cur.pop_back();
+  }
+  return 0;
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210353&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+是给一个Pair (M, N) 代表坐标，你从(1, 1)出发，每次 (x, y) => (x + y, y) or (x, x + y)向右下方移动，如果能达到(M, N)就是True，反之False
+我一开始说BFS，面试官说不是最优，最优是 O(m+n)，然后就到QA环节了。
+之后自己想了下，可以从(M, N) 出发，M 和 N 必定一大一小，否则不可能满足上述条件。所以两者中较大是 X + Y， 较小是 X 或 Y。
+由此从右下往左上反推，每一步都只可能有一个路径，所以最终能到达(1, 1)则为 True。
+
+bool arrive(vector<int>& maze, int m, int n) {
+  while (maze[m][n] == 1) {
+    if ((m == 1) && (n == 1)) break;
+    maze[m][n] = 2;
+    if (m > n) {
+      m = m-n;
+    }
+    else if (m < n) {
+      n = n-m;
+    }
+    else {
+      break;
+    }
+  }
+  if ((m == 1) && (n == 1)) return true;
+  else return false;
+}
+
+ Maximum Size Subarray Sum Equals k  
+ 
+ int maxsize(vector<int>& nums, int target) {
+  unordered_map<int, int> summap;
+  int maxlen = -1, sum = 0;
+  for (int i = 0; i < nums.size(); ++i) {
+    sum += nums[i];
+    if (sum == target) maxlen = i+1;
+    else {
+      if (summap.find(sum-target) != summap.end()) {
+        maxlen = max(maxlen, i-summap[sum-target].second+1);
+      }
+    }
+    if (summap.find(sum) == summap.end()) {
+      summap[sum] = i;
+    }
+  }
+  return maxlen;
+ }
+ 
+ http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=173867&extra=page%3D2%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+ 
+ minimum product subarray
+ 
+ int minproduct(vector<int>& nums) {
+  assert(nums.size() != 0);
+  int minsofar = nums[0], maxcur = nums[0], mincur = nums[0];
+  
+  for (int i = 1; i < nums.size(); ++i) {
+    int temp = maxcur;
+    maxcur = max(max(maxcur*nums[i], mincur*nums[i]), nums[i]);
+    mincur = min(min(maxcur*nums[i], mincur*nums[i]), nums[i]);
+    minsofar = min(mincur, minsofar);
+  }
+  return minsofar;
+ }
+ 
+ max sum subarray
+ 
+ int maxsum(vector<int>& A) {
+  int maxsofar = 0, maxcur = 0;
+  for (int i = 0; i < A.size(); ++i) {
+    maxcur = max(maxcur+A[i], A[i]);
+    maxsofar = max(maxcur, maxsofar);
+  }
+  return maxsofar;
+ }
+ 
+ // read4k(char* input, char* buff);
+ class Read {
+ public:
+  int read(char* input, int n) {
+    int k = 0;
+    char* out = new char[n];
+    int cnt = 0;
+    int readnum = readbuf(out, n);
+    out += readnum;
+    cnt += readnum;
+    n -= readnum;
+    while (n != 0) {
+      int readnum = read4k(input, buff);
+      if (n >= readnum) {
+        memcpy(buff, out, readnum);
+        n -= readnum;
+        out += readnum;
+        cnt += readnum;
+      }
+      else {
+        memcpy(buff, out, n);
+        n = 0;
+        start = n;
+        end = readnum;
+        out += n;
+        cnt += n;
+      }
+      if (readnum < 4096) break;
+    }
+    return cnt;
+  }
+  
+ private:
+  char buff[4096];
+  int start = 0;
+  int end = 0;
+  
+  int readbuf(char* out, int k) {
+    if (end == start) {
+      return 0;
+    }
+    if (end - start <= k) {
+      memcpy(buff+start, out, end-start);
+      start = 0;
+      end = 0;
+      return end-start;
+    }
+    else {
+      memcpy(buff+start, out, k);
+      start += k;
+      return k;
+    }
+  }
+ };
