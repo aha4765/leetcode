@@ -1,0 +1,59 @@
+// how to do graph
+
+1. using adjacency matrix
+
+struct Graph {
+  int V;
+  vector<vector<int>> graph;
+};
+
+2. using adjacency list
+
+struct Graph {
+  int V;
+  list<int>* adj;
+} graph;
+
+int visited[V]; to represent visited node in bfs and dfs
+
+// Union and find
+
+class UF{
+public:
+  UF(int cap) : N(cap) {
+    for (int i = 0; i < N; ++i) {
+      parent.push_back(i);
+      rank.push_back(0);
+    }
+  }
+  
+  int find(int x) {
+    while (x != parent[x]) {
+      x = parent[x];
+    }
+    return x;
+  }
+  
+  void merge(int x, int y) {
+    int px = find(x);
+    int py = find(y);
+    if (px == py) {
+      return;
+    }
+    if (rank[px] > rank[py]) {
+      parent[py] = px;
+    }
+    else {
+      parent[px] = py;
+    }
+    if (rank[px] == rank[py]) {
+      rank[py]++;
+    }
+    return;
+  }
+
+private:
+  int N;
+  vector<int> parent;
+  vector<int> rank;
+};
