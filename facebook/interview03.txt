@@ -1,0 +1,111 @@
+/*
+
+two functions:
+- setup(dict)
+- isMember(word)
+
+setup():
+- input is array of strings (which represent the "dictionary" of words we know)
+- this function does some reasonable preprocessing on the dictionary
+
+isMember():
+- input is word in question, which could contain "." wildcard characters
+- we want this one to be fast
+
+examples:
+setup(['foo', 'bar', 'baz'])
+isMember('foo') # true
+isMember('garply') # false
+isMember('f.o') # true
+isMember('..') # false
+
+{
+'fooooooooooobar',
+'foooooooobar',
+'fooooooooooooooobar',
+'fooooooooooooobar',
+'fabcabcabcbar',
+'fabcabcabcabcbar'
+}
+
+*/
+
+// Trie  run-length
+
+struct TrieNode {
+  char val;
+  bool end;
+  TrieNode* child[256];
+  
+  unordered_map<string, TrieNode*> child;
+  
+  TrieNode (char v, bool isend) {
+    val = v;
+    end = isend;
+    memset(child, 0, sizeof(child));
+  }
+};
+
+class dict {
+public:
+  int setup(vector<string>& input) {
+    for (int i = 0; i < input.size(); ++i) {
+      string word = input[i];
+      TrieNode* node = &root;
+      for (int j = 0; j < word.size(); ++j) {
+        if (node->child[word[j]] == nullptr) {
+          if (j == word.size()-1) {
+            node->child[word[j]] = new TrieNode(word[j], true);
+          }
+          else {
+            node->child[word[j]] = new TrieNode(word[j], false);
+          }
+        }
+        node = node->child[word[j]];
+      }
+    }
+    return 0;
+  }
+  
+  bool isMember(string word) {
+    return dfs(&root, word, 0);
+  }
+  
+  // we are checking the word[pos] now
+  bool dfs(TrieNode* node, string& word, int pos) {
+    if (node == nullptr) return false;
+    if (pos == word.size()-1) {
+      if (word[pos] == '.') {
+        for (int i = 0; i < 256; ++i) {
+          if ((node->child[i] != nullptr) && (node->child[i]->end)) {
+            return true;
+          }
+        }
+        return false;
+      }
+      else {
+        if ((node->child[word[pos]] != nullptr) && (node->child[word[pos]]->end)) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+    }
+    
+    if (word[pos] != '.') {
+      return dfs(node->child[word[pos]], word, pos+1);
+    }
+    else {
+      for (int i = 0; i < 256; ++i) {
+        if (dfs(node->child[i], word, pos+1)) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+  
+ private:
+  TrieNode root;
+};
