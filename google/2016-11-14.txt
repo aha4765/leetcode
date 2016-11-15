@@ -1,0 +1,151 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210600&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+average of last k numbers in data stream，
+
+class Avg{
+public:
+    Avg(int k)
+    : cap(k), sum(0){
+    }
+    
+    void read(int a) {
+        if (buf.size() == cap) {
+            sum -= buf.front();
+            sum += a;
+            buf.pop();
+            buf.push(a);
+        }
+        else {
+            sum += a;
+            buf.push(a);
+        }
+    }
+    
+    int avg() {
+        return sum/buf.size();
+    }
+
+private:
+    queue<int> buf;
+    int cap;
+    int sum;
+};
+
+merge intervals
+
+https://leetcode.com/problems/merge-intervals/
+
+首先第一题如果你有一个文件，每一行可能有重复[AB, A, B, A]，问怎样求得不重复的文件[AB, A, B]
+然后第二题是如果这个文件很大内存存不下怎么办。然后面试官没怎么让我回答就说我感觉你应该不知道，要不我告诉你答案吧。思路是如果允许犯一些错，把某一行用一些hash function映射到一个数组h1, h2, ..., hk in [1, N]. 然后把每个hi设成true。问我这样会不会有false positive和false negative。我应该答错了。
+
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210040&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+LeetCode – Group Shifted Strings
+ 
+Given a string, we can "shift" each of its letter to its successive letter, for example: "abc" -> "bcd". We can keep "shifting" which forms the sequence: "abc" -> "bcd" -> ... -> "xyz".
+
+Given a list of strings which contains only lowercase alphabets, group all strings that belong to the same shifting sequence, return:
+
+[
+  ["abc","bcd","xyz"],
+  ["az","ba"],
+  ["acef"],
+  ["a","z"]
+]
+
+vector<vector<string>> combine(vector<string>& strs) {
+    unordered_map<string, vector<string>> buf;
+    for (string temp : strs) {
+        string base = transtr(temp);
+        buf[base].push_back(temp);
+    }
+    vector<vector<string>> res;
+    for (auto it = buf.begin(); it != buf.end(); ++it) {
+        res.push_back(it->second);
+    }
+    return res;
+}
+
+string transtr(string& str) {
+    string res;
+    res += 'a';
+    char first = str[0];
+    for (int i = 1; i < str.size(); ++i) {
+        if (str[i]-first >= 0) {
+            res += str[i]-first+'a';
+        }
+        else {
+            res += str[i]-first+26+'a';
+        }
+    }
+    return res;
+}
+
+2. 8*8国际象棋棋盘，给定Knight的起始和结束位置，输出最短的从起点到终点的路径。
+
+struct Pos {
+    int x;
+    int y;
+    Pos(int xi, int yi)
+    : x(xi), y(yi){
+    }
+    bool operator==(Pos a, Pos b) {
+        return a.x == b.x && a.y == b.y;
+    }
+    bool operator!=(Pos a, Pos b) {
+        return a.x != b.x || a.y != b.y;
+    }
+};
+vector<Pos> getpath(Pos start, Pos end) {
+    vector<vector<pair<int, Pos>>> board (8, vector<int>(8, make_pair(0, Pos(-1,-1))));
+    board[start.x][start.y].first = 1;
+    board[end.x][end.y].first = 2;
+    
+    list<Pos> templt0, templt1;
+    list<Pos> *lt0 = &templt0, *lt1 = &templt1;
+    lt0->push_back(start);
+    while (!lt0->empty()) {
+        Pos pos = lt0->front();
+        lt0->pop();
+        if (pos.x == end.x && pos.y == end.y) {
+            break;
+        }
+        if ((pos.x >=2) && (pos.y >= 1) && (board[pos.x-2][pos.y-1].first != 1)) {
+            board[pos.x-2][pos.y-1].second = pos;
+            board[pos.x-2][pos.y-1].first = 1;
+            lt1->push_back(Pos(pos.x-2, pos.y-1));
+        }
+        if ((pos.x >=2) && (pos.y < board[0].size()-1) && (board[pos.x-2][pos.y+1].first != 1)) {
+            board[pos.x-2][pos.y+1].second = pos;
+            board[pos.x-2][pos.y+1].first = 1;
+            lt1->push_back(Pos(pos.x-2, pos.y+1));
+        }
+        if ((pos.x < board.size()-2) && (pos.y >= 1) && (board[pos.x+2][pos.y-1].first != 1)) {
+            board[pos.x+2][pos.y-1].second = pos;
+            board[pos.x+2][pos.y-1].first = 1;
+            lt1->push_back(Pos(pos.x+2, pos.y-1));
+        }
+        if ((pos.x < board.size()-2) && (pos.y < board[0].size()-1) && (board[pos.x+2][pos.y+1].first != 1)) {
+            board[pos.x+2][pos.y+1].second = pos;
+            board[pos.x+2][pos.y+1].first = 1;
+            lt1->push_back(Pos(pos.x+2, pos.y+1));
+        }
+        swap(lt0, lt1);
+        lt1->clear();
+    }
+    vector<Pos> res;
+    Pos curpos = end;
+    while (curpos != start) {        
+        res.push_front(curpos);
+        curpos = board[curpos.x][curpos.y].second;
+    }
+    res.push_front(start);
+    return res;
+}
+
+Valid Number
+//TODO
+
+LC 356, 但是直线可以是任意直线
+
