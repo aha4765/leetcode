@@ -1,0 +1,211 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210743&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+給你一個 m x n 的 grid，上面只有整數 1 和 0，其中 1 代表 pixel，0 代表空白，要你找所有的 lonely pixel (一個 pixel 在同行或同列上沒有其他 pixel) 的座標。
+
+時間複雜度要求: O(m*n)
+
+struct Coord {
+    int x;
+    int y;
+    Coord(int xi, int yi) 
+    : x(xi), y(yi){
+    }
+};
+vector<Coord> findlonely(vector<vector<int>& grid>) {
+    int nrow = grid.size();
+    int ncol = grid[0].size();
+    
+    vector<Coord> res;
+    vector<int> rowcand(nrow, -1), colcand(ncol, -1);
+    for (int i = 0; i < nrow; ++i) {
+        for (int j = 0; j < ncol; ++j) {
+            if (grid[i][j] == 1) {
+                if (rowcand[i] == -1) {
+                    rowcand[i] = j;
+                }
+                else if (rowcand[i] >= 0) {
+                    rowcand[i] = -2;
+                }
+                
+                if (colcand[j] == -1) {
+                    colcand[j] = i;
+                }
+                else if (colcand[j] >= 0) {
+                    colcand[j] = -2;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < rowcand.size(); ++i) {
+        if (rowcand[i] >= 0) {
+            if (colcand[rowcand[i]] == i) {
+                res.push_back(Coord(i, rowcand[i]));
+            }
+        }
+    }
+    
+    return res;
+}
+
+Find the last index of target from a sorted array.
+
+int lastindex(vector<int>& nums, int target) {
+    int left = 0, right = nums.size()-1, med;
+    while (left <= right) {
+        med = (left+right)/2;
+        if (nums[med] == target) {
+            break;
+        }
+        else if (nums[med] < target) {
+            left = med+1;
+        }
+        else {
+            right = med-1;
+        }
+    }
+    if (left > right) {
+        return -1;
+    }
+    else {
+        while ((nums[med] == target) && (med < nums.size())) {
+            med++;
+        }
+        return med-1;
+    }
+}
+
+Detect cycle in direcyed graph.
+
+// use dfs to find cycle
+
+1. use adj matrix to denote graph
+// graph[i][j] is 1 if there is edge from i to j
+bool getcycle(vector<vector<int>>& graph) {
+    int N = graph.size();
+    vector<int> col(N, 0);
+    for (int i = 0; i < N; ++i) {
+        if (dfs(graph, col, i)) {
+            return true;
+        }
+    }
+    return false;
+}
+// col is 0 if not visited, 1 if current visiting, 2 if complete visiting
+bool dfs(vector<vector<int>>& graph, vector<int>& col, int v) {
+    int N = graph.size();
+    col[v] = 1;
+    for (int i = 0; i < N; ++i) {
+        if (graph[v][i] == 1) {
+            if (col[i] == 1) {
+                return true;
+            }
+            else if (col[i] == 0) {
+                if (dfs(graph, col, i)) {
+                    return true;
+                }
+            }
+        }
+    }
+    col[v] = 2;
+    return false;
+}
+
+2. use adj list to denote graph
+struct Graph {
+    int V; // number of nodes
+    vector<list<int>> adj; // adj[i] includes neighbour of node i
+};
+
+bool getcycle(Graph& graph) {
+}
+
+int dfs(Graph& graph, vector<int>& col, int v) {
+    col[v] = 1;
+    for (auto it = graph.adj[v].begin(); it != graph.adj[v].end(); ++it) {
+        if (col[*it] == 1) {
+            return true;
+        }
+        else if (col[*it] == 0 && dfs(graph, col, *it)) {
+            return true;
+        }
+    }
+    col[v] = 2;
+    return false;
+}
+
+// use topology sort
+class Graph {
+public:
+    int V;
+    vector<list<int>> adj;
+    bool hascycle();
+    
+private:
+    vector<int> topologysort();
+    vector<vector<int>> alltopologysort();
+};
+
+bool Graph::hascycle() {
+    vector<int> topo = topologysort();
+    if (topo.size() != V) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+vector<int> Graph::topologysort() {
+    vector<int> innode(V, 0);
+    for (int i = 0; i < V; ++i) {
+        for (auto it = adj[i].begin(); it != adj[i].end(); ++it) {
+            innode[*it]++;
+        }
+    }
+    vector<int> topo;
+    queue<int> q;
+    for (int i = 0; i < V; ++i) {
+        if (innode[i] == 0) {
+            q.push(i);
+        }
+    }
+    
+    while (!q.empty()) {
+        int cur = q.front();
+        topo.push_back(cur);
+        q.pop();
+        for (auto it = adj[cur].begin(); it != adj[cur].end(); ++it) {
+            innode[*it]--;
+            if (innode[*it] == 0) {
+                q.push(*it);
+            }
+        }
+    }
+    return topo;
+}
+
+vector<vector<int>> Graph::alltopologysort() {
+}
+
+int helper(vector<vector<int>>& res, vector<int>& cur, vector<bool>& visited, vector<int>& inorder) {
+    if (cur.size() == V) {
+        res.push_back(cur);
+        return 0;
+    }
+    for (int i = 0; i < V; ++i) {
+        if (inorder[node] == 0 && !visited[i]) {
+            cur.push_back(node);
+            visited[node] = true;
+            for (auto it = adj[node].begin(); it != adj[node].end(); ++it) {
+                inorder[*it]--;
+            }
+            helper(res, cur, visited, inorder);
+            for (auto it = adj[node].begin(); it != adj[node].end(); ++it) {
+                inorder[*it]++;
+            }
+            visited[node] = false;
+            cur.pop_back();
+        }
+    }
+    return 0;
+}
