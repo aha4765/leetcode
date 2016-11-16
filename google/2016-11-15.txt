@@ -322,3 +322,81 @@ int nodenum(TreeNode* root) {
     if (root == nullptr) return 0;
     return 1 + nodenum(root->left) + nodenum(root->right);
 }
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210668&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+给你两个string，表示两个数，比如“132”，“32.5”，比较两个数的大小。要求one pass，不能用库函数
+
+int compare(string num1, string num2) {
+    double d1 = stod(num1);
+    double d2 = stod(num2);
+    if ()
+}
+
+double stod(string num1) {
+    double n1i = 0, n1f;
+    int pos = 0;
+    for (; pos < num1.size(); ++pos) {
+        if (num1[pos] == '.') {
+            pos++;
+            break;
+        }
+        n1i *= 10;
+        n1i += num1[pos]-'0';
+    }
+    for (int i = num1.size()-1; i >= pos; --i) {
+        n1f /= 10;
+        n1f += (num1[i]-'0')/10;
+    }
+    return n1i+n1f;
+}
+
+https://leetcode.com/problems/sqrtx/
+
+???
+给你一个string，求最长的substring，是另一个substring的prefix。比如"abcab", "ab"出现在两个地方，所以是符合条件的
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=209185&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+给定数组A，求数组B，满足b = A所有元素相乘除了a，不让使用除法
+
+vector<int> divide(vector<int>& nums) {
+    int N = nums.size();
+    vector<int> res(N, 1);
+    for (int i = 1; i < N; ++i) {
+        res[i] = res[i-1]*nums[i-1];
+    }
+    int prod = 1;
+    for (int i = N-2; i >= 0; --i) {
+        prod *= nums[i+1];
+        res[i] *= prod;
+    }
+    return res;
+}
+
+给定数组A，和k，求数组B，满足b=a*a[i+1]*...*a[i+k-1]，同样不让使用除法
+
+vector<int> divide(vector<int>& nums, int k) {
+    vector<vector<int>> prodtable;
+    prodtable.push_back(nums);
+    int n = 2;
+    while (n <= k) {
+        vector<int> temp;
+        for (int i = 0; i < prodtable.back().size()-1; i+=2) {
+            temp.push_back(prodtable.back()[i]*prodtable.back()[i+1]);
+        }
+        prodtable.push_back(temp);
+        n *= 2;
+    }
+    vector<int> bits;
+    while (k != 0) {
+        bits.push_back(k&0x1);
+        k = k >> 1;
+    }
+    int startbit = 0;
+    for (int p = 0; p <= nums.size()-k; ++p)
+        for (int i = bits.size()-1; i >= 0; --i) {
+            
+        }
+    }
+}
