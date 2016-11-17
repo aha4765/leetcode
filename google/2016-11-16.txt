@@ -1,0 +1,31 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210969&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+https://leetcode.com/problems/remove-duplicate-letters/
+
+找一个array所有有可能的sum，比如{2,3,4}有
+2+3 = 5
+2+4 = 6
+3+4 = 7
+2+3+4 = 9
+
+vector<int> arrsum(vector<int>& nums) {
+  unordered_set<int> sum;
+  dfs(sum, nums, 0);
+  vector<int> res;
+  for (auto it = sum.begin(); it != sum.end(); ++it) {
+    res.push_back(*it);
+  }
+  return res;
+}
+
+int dfs(unordered_set<int>& res, vector<int>& nums, int pos) {
+  if (pos == nums.size()) return 0;
+  for (auto temp : res) {
+    res.insert(temp + nums[pos]);
+  }
+  for (int i = 0; i < pos; ++i) {
+    res.insert(nums[i] + nums[pos]);
+  }
+  dfs(res, nums, pos+1);
+  return 0;
+}
