@@ -1,0 +1,180 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210240&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+给你一个一维array，标明一个区域内的山峦起伏（比如0位置上是1就代表这个地方的地面高度为1），然后再给你一个int 代表海平面（比如说这个数是4的话就代表海平面高度是4，因此之前讲的高度为3的地面实际就相当于海拔高度-3）。这样图中就会生成几个连续的水体，如图：
+
+求：将图中几个连续的水体各自的大小记下来，并return为一个array。
+
+vector<int> water(vector<int>& height, int sea) {
+    vector<int> res;
+    int water = 0;
+    for (int i = 0; i < height.size(); ++i) {
+        if (height[i] < sea) {
+            water += (sea - height[i]);
+        }
+        else {
+            if (water > 0) {
+                res.push_back(water);
+                water = 0;
+            }
+        }
+    }
+    return res;
+}
+
+然后面试官讲这道题follow up了一下，说有可能在某个地方，大洋底部，可能会有一个drain hole，会抽干周围所有的水（假设那个地方就是一个吸水的黑洞）。同样，让你把连续水体的size生成并且return回来。
+
+vector<int> water(vector<int>& height, int sea) {
+    int N = height.size();
+    vector<int> sealevel(N, sea);
+    int hole = 0;
+    for (int i = 0; i < N; ++i) {
+        if (height[i] == -1) {
+            hole = i;
+            break;
+        }
+    }
+    
+    sealevel[hole] = 0;
+    int cursea = 0;
+    for (int i = hole-1; hole >= 0; --i) {
+        if (height[i] >= sea) {
+            break;
+        }
+        cursea = max(cursea, height[i]);
+        sealevel[i] = cursea;
+    }
+    for (int i = hole+1; hole < N; ++i) {
+        if (height[i] >= sea) {
+            break;
+        }
+        cursea = max(cursea, height[i]);
+        sealevel[i] = cursea;
+    }
+    
+    vector<int> res;
+    int water = 0;
+    for (int i = 0; i < N; ++i) {
+        if (height[i] < sealevel[i]) {
+            water += (height[i] - sealevel[i]);
+        }
+        else {
+            if (water > 0) {
+                res.push_back(water);
+                water = 0;
+            }
+        }
+    }
+    return res;
+}
+
+// if have multiple holes
+vector<int> water(vector<int>& height, int sea) {
+    int N = height.size();
+    vector<int> sealevel(N, sea);
+    vector<int> hole;
+    for (int i = 0; i < N; ++i) {
+        if (height[i] == -1) {
+            hole.push_back(i);;
+        }
+    }
+    
+    for (int k = 0; k < hole.size(); ++k) {
+        sealevel[hole[k]] = 0;
+        int cursea = 0;
+        for (int i = hole[k]-1; hole >= 0; --i) {
+            if ((height[i] >= sealevel[i]) || (height[i] == -1)) {
+                break;
+            }
+            cursea = max(cursea, height[i]);
+            if (cursea >= sealevel[i]) {
+                break;
+            }
+            sealevel[i] = cursea;
+        }
+        for (int i = hole[k]+1; hole < N; ++i) {
+            if ((height[i] >= sealevel[i]) || (height[i] == -1)) {
+                break;
+            }
+            cursea = max(cursea, height[i]);
+            if (cursea >= sealevel[i]) {
+                break;
+            }
+            sealevel[i] = cursea;
+        }
+    }
+    
+    vector<int> res;
+    int water = 0;
+    for (int i = 0; i < N; ++i) {
+        if (height[i] < sealevel[i]) {
+            water += (height[i] - sealevel[i]);
+        }
+        else {
+            if (water > 0) {
+                res.push_back(water);
+                water = 0;
+            }
+        }
+    }
+    return res;
+}
+
+Write a function: given a vector of numbers, find out the 2 smallestelements.
+
+vector<int> smallest(vector<int>& nums) {
+    int first = INT_MAX, second = INT_MAX;
+    for (int i = 0; i < nums.size(); ++i) {
+        if (nums[i] < first) {
+            first = nums[i];
+            second = first;
+        }
+        else if (nums[i] < second) {
+            second = nums[i];
+        }
+    }
+    vector<int> res;
+    res.push_back(first);
+    res.push_back(second);
+    return res;
+}
+
+Q2.Moving Window Average
+
+{1, 2, 3 ,4 ,5…}
+
+Givenwindow parameter 3, {1, 1.5, 2, (2+3+4/3,...}
+
+solutionsol(3);
+sol.GetValue(1);-> 1
+sol.GetValue(2);-> 1.5
+
+sol.GetValue(3);-> 2
+
+第二题地里面以前出现过，让你写一个class，其中的GetValue() function返回从这个往前k次call的平均数。用类似rotated array的方法即可做。
+
+class Ave {
+public:
+    Ave(int cap) 
+    : k(cap), sum(0){
+    }
+    float GetValue(int val);
+    
+private:
+    deque<int> dq;
+    int k;
+    int sum;
+};
+
+float Ave::GetValue(int val) {
+    if (dq.size() < k) {
+        dq.push_back(val);
+        sum += val;
+    }
+    else {
+        sum += val;
+        sum -= dq.front();
+        dq.pop_front();
+        dq.push_back(val);
+    }
+    return (float)sum/k;
+}
