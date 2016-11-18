@@ -178,3 +178,85 @@ float Ave::GetValue(int val) {
     }
     return (float)sum/k;
 }
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210211&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+1. TODO: 
+https://www.topcoder.com/community/data-science/data-science-tutorials/binary-indexed-trees/
+https://discuss.leetcode.com/topic/30343/java-2d-binary-indexed-tree-solution-clean-and-short-17ms
+
+Problem：有两个string，一个比另外一个多一个char，其他都一样，如"hello"和"hepllo"，要找出这个char
+
+// O(N)
+char diff(string& s1, string& s2) {
+    int size1 = s1.size();
+    int size2 = s2.size();
+    
+    int i = 0;
+    while (i < min(size1, size2)) {
+        if (s1[i] != s2[i]) {
+            break;
+        }
+        ++i;
+    }
+    
+    return size1 > size2 ? s1[i] : s2[i];
+}
+
+// valid?
+bool diff(string& s1, string& s2) {
+    int size1 = s1.size();
+    int size2 = s2.size();
+    if (abs(size1-size2) != 1) return false;
+    int i = 0;
+    while (i < min(size1, size2)) {
+        if (s1[i] != s2[i]) {
+            break;
+        }
+        ++i;
+    }
+    
+    if (i == max(size1, size1)) {
+        return true;
+    }
+    // suppose s1 > s2
+    
+    
+    return size1 > size2 ? s1[i] : s2[i];
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=208614&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+https://leetcode.com/problems/search-a-2d-matrix-ii/
+
+给N个coin，每个coin的正面的prob，算要k个正面的概率
+
+double prob(vector<double>& prob, int k) {
+    
+}
+
+vector<vector<int>> permu(int N, int k) {
+    vector<vector<int>> res;
+    vector<int> cur;
+    bt(res, cur, 0, k, N);
+    return res;
+}
+
+int bt(vector<vector<int>>& res, vector<int>& cur, int pos, int k, int N) {
+    if (cur.size() == k) {
+        res.push_back(cur);
+        return 0;
+    }
+    if (pos == N) {
+        return 0;
+    }
+    
+    bt(res, cur, pos+1, k, N);
+    cur.push_back(pos);
+    bt(res, cur, pos+1, k, N);
+    cur.pop_back();
+    return 0;
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=209852&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
