@@ -1,0 +1,152 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=207690&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+1. 给个int array，找它subarray（中间indexes连续的那种）里满足 min(array)*2 > max(array)的那些，return最长的subarray（的长度）。
+
+// brute force
+int subarray(vector<int>& arr) {
+  int len = 0, maxlen = 0;
+  int minval, maxval;
+  for (int i = 0; i < arr.size(); ++i) {
+    maxlen = max(len, maxlen);
+    len = 0;
+    minval = arr[i];
+    maxval = arr[i];
+    for (int j = i; j < arr.size(); ++j) {
+      minval = min(minval, arr[j]);
+      maxval = max(maxval, arr[j]);
+      if (minval * 2 > maxval) {
+        len++;
+      }
+      else {
+        break;
+      }
+    }
+  }
+  return maxlen;
+}
+
+// have deque
+// mindeq records the index of min, maxdeq records the index of max
+int subarray(vector<int>& arr) {
+  deque<int> mindeq, maxdeq;
+  int left = 0, right = 0, len = 0;
+  for (int i = 0; i < arr.size(); ++i) {
+    while (!mindeq.empty() && arr[mindeq.back()] >= arr[i]) {
+      mindeq.pop_back();
+    }
+    while (!maxdeq.empty() && arr[maxdeq.back()] <= arr[i]) {
+      maxdeq.pop_back();
+    }
+    mindeq.push_back(i);
+    maxdeq.push_back(i);
+    right = i;
+    int curmin = arr[mindeq.front()]
+    int curmax = arr[maxdeq.front()]
+    if (curmin*2 > curmax) {
+      len = max(len, right-left+1);
+    }
+    else {
+      while (curmin*2 <= curmax && !mindeq.empty()) {
+        if (mindeq.front() == left) {
+          mindeq.pop_front();
+        }
+        if (maxdeq.front() == left) {
+          maxdeq.pop_front();
+        }
+        left++;
+        if (mindeq.empty()) break;
+        if (maxdeq.empty()) break;
+        curmin = arr[mindeq.front()]
+        curmax = arr[maxdeq.front()]
+      }
+    }
+  }
+  return len;
+}
+
+2. 一些tree的简单问题。。比如，给个tree，还有should_delete()，删掉某些node 把这个tree 分解成若干个tree，返回各个root
+
+vector<TreeNode*> split(TreeNode* root) {
+  vector<TreeNode*> res;
+  if (root == nullptr) return res;
+  res.push_back(root);
+  dfs(res, root, nullptr, true);
+  return res;
+}
+
+int dfs(vector<TreeNode*>& res, TreeNode* node, TreeNode* parent, bool left) {
+  if (should_delete(node)) {
+    if (parent != nullptr && left) {
+      parent->left == nullptr;
+    }
+    else if (parent != nullptr && !left) {
+      parent->right = nullptr;
+    }
+    if (node->left != nullptr) {
+      res.push_back(node->left);
+      dfs(res, node->left, node, true);
+    }
+    if (node->right != nullptr) {
+      res.push_back(node->right);
+      dfs(res, node->right, node, false);
+    }
+  }
+  return 0;
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=209673&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+2.给你一个数字的list，然后给一个target，求所有由list里面数字组合成的小于target的数，数字可以重复使用
+比如list是{3,7,8}，target是8700，然后3, 8, 7 ... 333, 888, ... , 8377 等等都算
+
+vector<int> getnum(vector<int>& nums, int target) {
+  vector<int> res;
+  bt(res, nums, 0, target);
+  res.erase(res.begin());
+  return res;
+}
+
+int bt(vector<int>& res, vector<int>& nums, int curnum, int target) {
+  if (curnum >= target) {
+    return 0;
+  }
+  else if (curnum) {
+    res.push_back(curnum); 
+  }
+  for (int i = 0; i < nums.size(); ++i) {
+    curnum *= 10;
+    curnum += nums[i];
+    bt(res, nums, curnum, target);
+  }
+  return 0;
+}
+
+给一个String和一个字典，找字典里面长度最长的能由String里面删去某些字符后组成的单词
+比如S = abpcplea， Dict = {ale, apple, monkey, plea}, 就返回apple
+
+// 1. naive method
+string longsubstr(string& s, vector<string>& dict) {
+  sort(dict.begin(), dict.end(), [&](string a, string b){return a.size() > b.size();});
+  int i = 0;
+  for (; i < dict.size(); ++i) {
+    if (match(s, dict[i])) {
+      return dict[i];
+    }
+  }
+  return string("");
+}
+
+bool match(string& s, string& p) {
+  int si = 0, pi = 0;
+  while (si < s.size() && pi < p.size()) {
+    if (s[si] == p[pi]) {
+      si++;
+      pi++;
+    }
+    else {
+      si++;
+    }
+  }
+  if (pi == p.size()) return true;
+  else return false;
+}
