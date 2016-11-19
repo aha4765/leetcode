@@ -1,0 +1,160 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=211188&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+1. binary search，如果numbers服从uniform distribution，怎么优化
+
+bool bsearch(vector<int>& nums, int target) {
+    int left = 0, right = nums.size()-1;
+    while (left <= right) {
+        int med = estimate(nums, left, right, target);
+        if (nums[med] == target) {
+            return med;
+        }
+        else if (nums[med] < target) {
+            left = med + 1;
+        }
+        else {
+            right = med - 1;
+        }
+    }
+    return false;
+}
+
+int estimate(vector<int>& nums, int start, int end, int target) {
+    if (start == end) return start;
+    return min((target-nums[start])*(end-start)/(nums[end]-nums[start])+start, end);
+}
+
+OOD ????
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=209426&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+Given a string, find the length of the longest substring T that contains at most k distinct characters.
+For example, Given s = “eceba” and k = 2,
+T is "ece" which its length is 3.
+
+int substr(string& str, int k) {
+    unordered_map<char, int> set;
+    int left = 0, right = 0;
+    int len = 0;
+    while ((left <= right) && (right < str.size())) {
+        while ((set.size() > k) && (left <= right)) {
+            set[str[left]]--;
+            if (set[str[left]] == 0) {
+                set.erase(str[left]);
+            }
+            left++;
+        }
+        while ((set.size() <= k) && (right < str.size())) {
+            set[str[right++]]++;
+        }
+        len = max(len, right-left);
+    }
+    return len;
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=207354&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+1. illegal bst??
+
+2. 找到一个array of integers的equalibrium point。Equalibruim的定义是左右数字的和各相等
+int epoint(vector<int>& nums) {
+    int N = nums.size();
+    vector<int> sum(N, 0);
+    sum[0] = nums[0];
+    for (int i = 1; i < N; ++i) {
+        sum[i] = sum[i-1] + nums[i];
+    }
+    if (sum[N-1] - sum[0] == 0) return 0;
+    for (int i = 1; i < N; ++i) {
+        if (sum[N-1]-sum[i] == sum[i-1]) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+3. 给一个sorted array，找most popular element。只要数量超过N/4就算most popular，N是array的size
+
+int popular(vector<int>& nums) {
+    int cnt = 1;
+    int curnum = nums[0];
+    int N = nums.size();
+    
+    for (int i = 1; i < N; ++i) {
+        if (curnum == nums[i]) {
+            cnt++;
+        }
+        else {
+            cnt = 1;
+            curnum = nums[i];
+        }
+        if (cnt > N/4) {
+            return curnum;
+            break;
+        }
+    }
+    return -1;
+}
+
+int popular(vector<int>& nums) {
+    int cand0, cand1, cand2, cand3;
+    int cnt0 = 0, cnt1 = 0, cnt2 = 0, cnt3 = 0;
+    
+    for (int i = 0; i < nums.size(); ++i) {
+        if (cand0 == nums[i]) {
+            cnt0++;
+        }
+        else if (cand1 == nums[i]) {
+            cnt1++;
+        }
+        else if (cand1 == nums[i]) {
+            cnt1++;
+        }
+        else if (cnt0 == 0) {
+            cand0 = nums[i];
+            cnt0++;
+        }
+        else if (cnt1 == 0) {
+            cand1 = nums[i];
+            cnt1++;
+        }
+        else if (cnt2 == 0) {
+            cand2 = nums[i];
+            cnt2++;
+        }
+        else {
+            cnt0--;
+            cnt1--;
+            cnt2--;
+        }
+    }
+    
+    cnt0 = 0;
+    cnt1 = 0;
+    cnt2 = 0;
+    
+    for (int i = 0; i < nums.size(); ++i) {
+        if (nums[i] == cand0) {
+            cnt0++;
+        }
+        else if (nums[i] == cand1) {
+            cnt1++;
+        }
+        else if (nums[i] == cand2) {
+            cnt2++;
+        }
+    }
+    
+    if (cnt0 > nums.size()/4) {
+        return cand0;
+    }
+    else if (cnt1 > nums.size()/4) {
+        return cand1;
+    }
+    else if (cnt2 > nums.size()/4) {
+        return cand2;
+    }
+    else {
+        return -1;
+    }
+}
