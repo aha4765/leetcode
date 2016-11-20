@@ -188,3 +188,135 @@ bool match(string& s, string& p, unordered_map<string, int>& prefix) {
 }
 
 // use a Trie instead of a hash map
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=138432&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+第一轮是顺时针旋转一个正方形矩阵
+
+vector<vector<int>> rotate(vector<vector<int>>& matrix) {
+  int N = matrix.size();
+  vector<vector<int>> res(N, vector<int>(N, 0));
+  for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < N; ++j) {
+      res[i][j] = matrix[j][i];
+    }
+  }
+  return res;
+}
+
+2d matrix as image
+
+visit every pixel of an image in a clockwise spiral pattern without visiting the same pixel twice
+
+int visit(vector<vector<int>>& matrix) {
+  int nrow = matrix.size();
+  int ncol = matrix[0].size();
+  
+  int srow = 0, erow = nrow-1, scol = 0, ecol = ncol - 1;
+  while ((srow <= erow) && (scol <= ecol)) {
+    for (int i = scol; i <= ecol; ++i) {
+      cout << matrix[srow][i] << " ";
+    }
+    srow++;
+    for (int i = srow; i <= erow; ++i) {
+      cout << matrix[i][ecol] << " ";
+    }
+    ecol--;
+    if (srow <= erow) {
+      for (int i = ecol; i >= scol; --i) {
+        cout << matrix[erow][i] << " ";
+      }
+      erow--;
+    }
+    if (scol <= ecol) {
+      for (int i = erow; i >= srow; --i) {
+        cout << matrix[i][scol] << " ";
+      }
+      scol++;
+    }    
+  }
+  cout << endl;
+  return 0;
+}
+
+Question is:
+Given a signature for a list of number, trying to print out a list of number that fits the signature, with lowest value of the highest number, and at the same time, no duplicated numbers.
+
+#include <vector>
+#include <string>
+using namespace std;
+
+struct Node{
+  int val;
+  Node* pre;
+  Node* next;
+
+  Node(int v) 
+  : val(v), pre(nullptr), next(nullptr){
+  }
+};
+
+vector<int> gennum(string& sig) {
+  Node* head = new Node(-1);
+  Node* start = new Node(1);
+  head->next = start;
+  start->pre = head;
+  Node* cur = start, *tail = start;
+  int curval = 2;    
+  for (int i = 0; i < sig.size(); ++i) {
+    if (sig[i] == 'i') {
+      tail->next = new Node(curval++);
+      tail->next->pre = tail;
+      tail = tail->next;
+      cur = tail;
+    }
+    else if (sig[i] == 'd') {
+      Node* temp = new Node(curval++);
+      temp->pre = cur->pre;
+      temp->pre->next = temp;
+      cur->pre = temp;
+      temp->next = cur;
+      cur = temp;
+    }
+  }
+  vector<int> res;
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=173970&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+Considering there are N engineers in one company with id from 1 to N, Each of the Engineer has a skill rate R_i, we want to select one group of engineering whose ids 
+have to be continuous. The size of one group is the number of engineers in it and the skill rating of the group is the lowest rating of all the members in the group. Now given N and array R, for each group 
+from size X from 1 to N, we want to know the highest skill rating of all the groups whose size is X.
+
+// ref http://keithschwarz.com/interesting/code/?dir=find-duplicate
+
+int localmin(vector<int>&)
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=207688&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+右移array  k 位, in-place
+input: {0, 1, 2, 3, 4}, k = 2
+output: {3, 4, 0, 1, 2}
+
+int rotate(vector<int>& nums, int k) {
+  int N = nums.size();
+  int sets = gcd(N, k);
+  
+  for (int i = 0; i < sets; ++i) {
+    int cur = (i + k)%N;
+    int temp = nums[i];
+    while (true) {
+      swap(temp, nums[cur]);
+      if (cur == i) break;
+      cur = (cur + k)%N;
+    }
+  }
+  return 0;
+}
+
+int gcd(int a, int b) {
+  if (b == 0) {
+    return a;
+  }
+  return gcd(b, a%b);
+}
