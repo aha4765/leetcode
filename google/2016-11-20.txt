@@ -1,0 +1,103 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=206734&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+1. 两个大文件，分别存在两台机器上，通过网络连接，带宽有限。只有一小部分不同，如何同步。
+刚开始说读取每一行，传过去比较。后来给了点提示说做些运算。后来回答切成几部份，然后计算MD5,传过去比较。他说可以。
+2. copy-on-write 设计 lazystring类。
+实现
+const char* get()
+LazyString(const char*)//allocate new storage..
+LazyString(LazyString& str)// does not allocate new storage-google 
+void copy_from(const char*str)// allocate new storage
+
+example: LazyString("asdf"); //allocate new storage
+LazyString b(&a);// shares storage with a
+assert(a.get()==b.get()); //they have smae sotrage
+b.copy_from("asdf"); //modifei b, allocate new storage.
+assert(a.get()!=b.get());// they have different sotrage
+
+class LazyString {
+public:
+    LazyString(const char* cstr) {
+        *refcnt--;
+        if (*refcnt == 0) {
+            delete[] storage;
+            delete refcnt;
+        }
+        storage = new char[strlen(cstr)+1];
+        strcpy(storage, cstr);
+        refcnt = new int;
+        *refcnt = 1;
+    }
+    LazyString(LazyString& str) {
+        storage = str.storage;
+        refcnt = str.refcnt;
+        *refcnt++;
+    }
+    void copy_from(const char* str) {
+        *refcnt--;
+        if (*refcnt == 0) {
+            delete[] storage;
+            delete refcnt;
+        }
+        storage = new char[strlen(cstr)+1];
+        strcpy(storage, cstr);
+        refcnt = new int;
+        *refcnt = 1;
+    }
+    const char* get() {
+        return storage;
+    }
+private:
+    char* storage;
+    int* refcnt;
+};
+
+第一道easy， 判断string T的所有字符是否都出现在String S中。
+// use a map
+
+第二道是 minimum window substring
+
+https://leetcode.com/problems/minimum-window-substring/
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=204501&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%255B3090%255D%255Bvalue%255D%3D2%26searchoption%255B3090%255D%255Btype%255D%3Dradio%26searchoption%255B3046%255D%255Bvalue%255D%3D1%26searchoption%255B3046%255D%255Btype%255D%3Dradio&page=1
+
+给一个array， 找出这个array 的local minimum。 Local minimum的定义是小于左边并且小于右边。
+vector<int> localmin(vector<int>& nums) {
+    vector<int> res;
+    int dif = nums[1] - nums[0];
+    for (int i = 2; in < nums.size(); ++i) {
+        if ((dif < 0) && (nums[i-1] - nums[i] < 0)) {
+            res.push_back(nums[i-1]);
+        }
+        dif = nums[i] - nums[i-1];
+    }
+    return res;
+}
+
+2. 给一个tree, 求所有root to leaf 组成数字的和
+int sum() {
+    
+}
+
+int dfs(TreeNode* root, int val) {
+    int res = 0;
+    if ((root->left == nullptr && root->right == nullptr)) {
+        res += val*10 + root->val;
+        return res;
+    }
+    if (root->left != nullptr) {
+        res += dfs(root->left, val*10+root->val);
+    }
+    if (root->right != nullptr) {
+        res += dfs(root->right, val*10+root->val);
+    }
+    return res;
+}
+
+3. 给一个string， 求一个permutation让没有两个相邻的char相等. 比如 abba -> abab
+
+greedy
+
+1. 给一个tree， 一滴水从root到leaf， 每段edge都有一个时间， 是水滴穿过的时间。求问多久整个tree都会变湿。
+ similar to the above
+ 
