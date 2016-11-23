@@ -76,3 +76,8 @@ vector<int> smalldist(Graph& graph, int src) {
 }
 Time complexity O((V+E)*logV)
 
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=182371&extra=page%3D2%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+有一个input  stream, 给两个function:next(),  hasnext(), find  the  longest  string  with  n  distinct  characters
+
+
