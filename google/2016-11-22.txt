@@ -1,0 +1,99 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=166600&extra=page%3D2%26filter%3Dsortid%26sortid%3D311%26searchoption%255B3090%255D%255Bvalue%255D%3D2%26searchoption%255B3090%255D%255Btype%255D%3Dradio%26searchoption%255B3046%255D%255Bvalue%255D%3D1%26searchoption%255B3046%255D%255Btype%255D%3Dradio&page=1
+
+然后做题：
+A: 34567
+B: 45678
+C: 67345. 
+交换A中的数字位置，得到一个新的数C，使得C大于B。
+我的想法是，每次挑出最大的那个digit跟前面的swap，直到找大于B的，时间复杂度是O(n*n);corner case：当A、B的digits个数不等时，直接返回结果。
+这时候小哥给了hint说这本质上是一个sort问题，那么sort问题你ideal复杂度应该是多少呢？sort我就直接想到了quicksort，我就说找最大digit的那个过程可以用quick select，这样就是O(nlogn)了。然后让用test case跑一边quick select，让分析复杂度。
+
+Follow up: 存在很多这样的C，返回其中最小的那个。
+
+// TODO:
+
+int upper(int A, int B) {
+    int res = 0;
+    vector<int> b;
+    list<int> a;
+    while (A != 0) {
+        a.push_back(A%10);
+        A /= 10;
+    }
+    while (B != 0) {
+        b.push_back(B%10);
+        B /= 10;
+    }
+    if (a.size() < b.size()) {
+        return -1;
+    }
+    if (a.size() > b.size()) {
+        sort(a.begin(), a.end());
+        auto it = a.begin();
+        for (; it < a.end(); ++it) {
+            if (*it != 0) {
+                break;
+            }
+        }
+        a.erase(it);
+        a.push_front(*it);
+        for (it = a.begin(); it != a.end(); ++it) {
+            res *= 10;
+            res += *it;
+        }
+        return res;
+    }
+    // sort, from large to small
+    sort(a.begin(), a.end(), [&](int x, int y){return x > y;});
+    if (list2int(a) <= B) return -1;
+    sort(a.begin(), a.end());
+}
+
+// cur is the value before pos
+int bt(list<int> a, vector<int>& b, int B, int pos, list<int>& cur) {
+    int res;
+    if (pos == b.size()) {
+        if (res = list2int(cur) > B) {
+            return res;
+        }
+        else {
+            return -1;
+        }
+    }
+    for (auto it = a.begin(); it < a.end(); ++it) {
+        if (*it < b[pos]) {
+            continue;
+        }
+        else if (*it == b[pos]) {
+            cur.push_back(*it);
+            list<int> temp = a;
+            a.erase(it);
+            if (res = bt(a, b, B, pos+1, cur) != -1) {
+                return res;
+            }
+            else {
+                a = temp
+            }
+        }
+        else {
+            cur.push_back(*it);
+            a.erase(it);
+            for (auto temp : a) {
+                cur.push_back(temp);
+            }
+            return list2int(cur);
+        }
+    }
+}
+
+int list2int(list<int>& a) {
+    int res = 0;
+    for (it = a.begin(); it != a.end(); ++it) {
+        res *= 10;
+        res += *it;
+    }
+    return res;
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=210977&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
