@@ -1,0 +1,78 @@
+// dijkstra's shortest path algorithm
+
+1. use adjacency matrix
+
+vector<int> shortestpath(vector<vector<int>>& graph, int src) {
+  int N = graph.size();
+  vector<int> dist(N, INT_MAX);
+  unordered_set<int> added;
+  dist[src] = 0;
+  for (int cnt = 0; cnt < N; ++cnt) {
+    int cand = findsmall(dist, added);
+    added.insert(cand);
+    for (int i = 0; i < N; ++i) {
+      if (i != cand && graph[cand][i] != -1) {
+        dist[i] = min(dist[i], graph[cand][i] + dist[cand]);
+      }
+    }
+  }
+  return dist;
+}
+
+int findsmall(vector<int>& dist, unordered_set<int> added) {
+  int index = 0, mindest = INT_MAX;
+  for (int i = 0; i < dist.size(); ++i) {
+    if (added.find(i) == added.end() && dist[i] < mindest) {
+      mindest = dist[i];
+      index = i;
+    }
+  }
+  return i;
+}
+
+Time complexity O(N^2)
+
+2. use adjacency list
+struct Node {
+  int dest;
+  int weight;
+};
+struct Graph {
+  int V; // # of nodes
+  vector<list<Node>> adjlist;
+};
+struct DistNode {
+  int node;
+  int weight;
+  
+  DistNode(int n, int w) : node(n), weight(w) {
+  }
+};
+bool compare(DistNode* a, DistNode* b) {
+  return a->weight > b->weight;
+}
+vector<int> smalldist(Graph& graph, int src) {
+  int N = graph.V;
+  vector<int> dist(N, INT_MAX);
+  priority_queue<DistNode*> pq;
+  vector<bool> added(N, false);
+  dist[src] = 0;
+  pq.push(new DistNode(src, 0));
+  for (int i = 0; i < N; ++i) {
+    if (pq.empty()) {
+      break;
+    }
+    int cand = pq.top()->node;    
+    pq.pop();
+    added[cand] = true;
+    for (auto temp : graph.adjlist[cand]) {
+      if (added[temp.dest] == false && dist[cand] != INT_MAX) {
+        dist[temp.dest] = min(dist[temp], dist[cand] + temp.weight);
+        pq.push(new DistNode(temp.dest, dist[temp.dest]));
+      }
+    }
+  }
+  return dist;
+}
+Time complexity O((V+E)*logV)
+
