@@ -1,0 +1,81 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=213237&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+1. 怎么判断一个integer 2D array是不是如下形式的：
+a b c
+d a b
+e d a
+就是说斜着的数字都一样
+
+0 0, 1 1, 2 2
+0 1, 1 2, 2 3
+1 0, 2 1, 3 2
+
+bool valid(vector<vector<int>>& matrix) {
+    int nrow = matrix.size();
+    int ncol = matrix[0].size();
+    
+    int row, col;
+    for (int i = 0; i < ncol; ++i) {
+        row = 0;
+        col = i;
+        int val = matrix[row][col];
+        while (row < nrow && col < ncol) {
+            if (matrix[row++][col++] != val) {
+                return false;
+            }
+        }
+    }
+    
+    for (int i = 1; i < nrow; ++i) {
+        row = i;
+        col = 0;
+        int val = matrix[row][col];
+        while (row < nrow && col < ncol) {
+            if (matrix[row++][col++] != val) {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+LC 394
+
+class Solution {
+public:
+    string decodeString(string s) {
+        int idx = 0;
+        return decode(s, idx);
+    }
+    
+    // recursive
+    
+    string decode(string& s, int& idx) {
+        int count;
+        string res;
+        while (idx < s.size() && s[idx] != ']') {
+            if (isdigit(s[idx])) {
+                count = 0;
+                while (isdigit(s[idx])) {
+                    count *= 10;
+                    count += s[idx] - '0';
+                    idx++;
+                }
+                idx++;
+                string temp = decode(s, idx);
+                idx++;
+                while (count-- > 0) {
+                    res = res + temp;
+                }
+            }
+            else {
+                res = res + s[idx++];
+            }
+        }
+        return res;
+    }
+};
+
+TODO
+
