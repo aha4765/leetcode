@@ -1,0 +1,150 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=214021&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+1. 给一堆button 1 2 3 4 5 ， 可以按很多次，但是不能有重复，每次按的button可以是多个button的组合，like 1-23-4
+
+vector<string> pressbutton(int N) {
+  
+}
+
+// permutation
+vector<vector<int>> permu(int N) {
+  
+}
+
+// curres is the permutation of 1 - (pos-1)
+void help(int N, vector<vector<int>>& res, vector<int>& curres, int pos) {
+  if (pos == N+1) {
+    res.push_back(curres);
+    return;
+  }
+  
+  curres.push_back(pos);
+  for (int i = 0; i < curres.size(); ++i) {
+    swap(curres[i], curres.back());
+    help(N, res, curres, pos+1);
+    swap(curres[i], curres.back());
+  }
+  curres.pop_back();
+  return;
+}
+
+vector<string> adddash(vector<string>) {
+  
+}
+
+// wheter to add dash after raw[pos]
+void help2(vector<string>& res, string& raw, string curres, int pos) {
+  if (pos == raw.size()-1) {
+    res.push_back(curres);
+    return;
+  }
+  
+  curres += raw[pos];
+  help2(res, raw, curres, pos+1);
+  curres += '-';
+  help2(res, raw, curres, pos+1);
+  return;
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=212843&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+[LeetCode] Design Snake Game 设计贪吃蛇游戏
+ 
+
+Design a Snake game that is played on a device with screen size = width x height. Play the game online if you are not familiar with the game.
+
+The snake is initially positioned at the top left corner (0,0) with length = 1 unit.
+
+You are given a list of food's positions in row-column order. When a snake eats the food, its length and the game's score both increase by 1.
+
+Each food appears one by one on the screen. For example, the second food will not appear until the first food was eaten by the snake.
+
+When a food does appear on the screen, it is guaranteed that it will not appear on a block occupied by the snake.
+
+Example:
+Given width = 3, height = 2, and food = [[1,2],[0,1]].
+
+Snake snake = new Snake(width, height, food);
+
+Initially the snake appears at position (0,0) and the food at (1,2).
+
+|S| | |
+| | |F|
+
+snake.move("R"); -> Returns 0
+
+| |S| |
+| | |F|
+
+snake.move("D"); -> Returns 0
+
+| | | |
+| |S|F|
+
+snake.move("R"); -> Returns 1 (Snake eats the first food and right after that, the second food appears at (0,1) )
+
+| |F| |
+| |S|S|
+
+snake.move("U"); -> Returns 1
+
+| |F|S|
+| | |S|
+
+snake.move("L"); -> Returns 2 (Snake eats the second food)
+
+| |S|S|
+| | |S|
+
+snake.move("U"); -> Returns -1 (Game over because snake collides with border)
+
+// coord = row*w+col
+class Snake {
+  public:
+    Snake(int w, int h, vector<int> food) :
+    width(w), height(h), foodind(0){
+      body.push_front(0);
+      bodylookup.insert(0);
+      this.food = food;
+    }
+    int move(char direction) {
+      int head = body.front();
+      int hrow = head/w;
+      int hcol = head%w;
+      switch (direction) {
+        case: 'U': 
+        
+      }
+    }
+  private:
+    int width, height;
+    deque<int> body;
+    unordered_set<int> bodylookup;
+    vector<int> food;
+    int foodind;
+};
+
+1. s = 'ABCDE', t = 'ABxCDE', 找出inserted character。用two pointer做的，又写了几个test case。
+char findchar(string&s, string& t) {
+  int si = 0, ti = 0;
+  while (si < s.size())
+    if (s[si] != t[ti]) {
+      return t[ti]
+    }
+    si++;
+    ti++;
+  }
+  return t[ti];
+}
+2. follow up， 如果t被shuffle了怎么办。用dictionary做的。
+3. 树的alternate level order输出。用BFS做的
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=212094&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+第一题：求多边形的顺序点集， 求多边形的周长
+第二题：根据Q1写的程序，写一下Unit Test。因为之前没写过，所以答得很不好。
+第三题：“what is refence counting?" C++ 中怎么实现？
+第四题: 可能是根据第三问来的， 给一串字母， 求每个字母出现的次数。
+第五题：输入：www.google.com, 问在网络中都有那些操作？（有一个前缀，具体记不清了，就是不是输入在浏览器里）。
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=171071&extra=page%3D2%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
