@@ -1,0 +1,54 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=168483&extra=page%3D2%26filter%3Dsortid%26sortid%3D311%2520151%26searchoption%255B3090%255D%255Bvalue%255D%3D2%26searchoption%255B3090%255D%255Btype%255D%3Dradio%26searchoption%255B3046%255D%255Bvalue%255D%3D1%26searchoption%255B3046%255D%255Btype%255D%3Dradio&page=1
+
+给一个矩形区域长w高h，给一个string，给一个font的范围minF->maxF
+给两个函数可以调用height_of(font)返回某个font的高度，width_of(font, ch)返回某个char在某个font的长度，求能在矩形中放下string的最大font size
+
+int fontsize(int w, int h, string& s, int minF, int maxF) {
+  int start = minF, end = maxF;
+  while (start < end) {
+    int med = (start+end)/2;
+    if (canhold(med)) {
+      end = med;
+    }
+    else {
+      start = med+1;
+    }
+  }
+  return end;
+}
+
+bool canhold(string& s, int w, int h, int font) {
+  int level = h/heightof(font);
+  int curlevel = 1;
+  int pos = 0, curwd = 0;
+  while (pos < s.size())
+    if (curlevel > level) {
+      return false;
+    }
+    curwd += width_of(font, s[pos++]);
+    if (curwd > w) {
+      curwd = 0;
+      pos--;
+      level++;
+    }
+  }
+  return true;
+}
+
+2d matrix, sum, update, sum intensive, update intensive, 最后sum and update equalliy intensive. Sum intensive 不让用额外空间，还有sum和lc里面不一样，是一行一行的加过去，好像更简单，这轮比较稳，印度小哥说了会给positive feedback
+
+// TODO: learn binary index tree
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=176391&extra=page%3D2%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311%2520151
+
+group :(自己找规律) EX: Input: { "abc", "bcd", "yza", "fh", "ac", "z", "x", "d"}                                                 Output: {{"abc", "bcd", "yza"}, {"fh", "ac"}, {"z", "x", "d"}};
+
+// Use a hashmap, all reduce to begining with 'a', if s[i] > s[0], then s[i] = 'a' + s[i] - s[0] else s[i] = 'a' + s[i] + 26 - s[0]
+unordered_map<string, vector<string>>
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=175363&extra=page%3D2%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D1%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311%2520151
+
+问了一个fuzzysubstring的问题，就是input一个string，和一个dictionary，返回一个list，这个list装着所有的fuzzysubstring。 fuzzysubstring定义为在原字符串中取任意个char之后剩余字符串。我先描述了自己的思路，然后用recursion做出来了。期间一直边写边bb。。哈哈因为面试官不断强调think loudly。做完问了时间复杂度，我说exponential。 问为啥，我写了个式子说用master theorem。
+
+1. use backtrack to collect all candidates which satisfies requirement and use a unordered_set to remove duplicate
+Time complexity O(2^N), N is string size
