@@ -1,0 +1,88 @@
+Please use this Google doc to code during your interview. To free your hands for coding, we recommend that you use a headset or a phone with speaker option.
+
+
+
+
+NxN matrix, elements are unique integers in range [1..N^2]
+
+
+2 3 5
+1 4 6
+9 8 7
+
+
+a seq. to be consecutive(+/- 1) neighbors (vertical and horizontal), 
+
+
+5 6 7 8 9
+1 2 3 4
+
+
+find longest seq.
+
+
+vector<int> longest(vector<vector<int>>& matrix) {
+	int nrow = matrix.size();
+	int ncol = matrix[0].size();
+
+
+	int maxlen = 0, startnum = -1;
+	vector<vector<int>> len(nrow, vector<int>(ncol, -1));
+	for (int i = 0; i < nrow; ++i) {
+		for (int j = 0; j < ncol; ++j) {
+			if (len[i][j] == -1) {
+				int curlen = dfs(matrix, len, i, j);
+				if (curlen > maxlen) {
+					maxlen = curlen;
+					startnum = matrix[i][j];
+}
+			}
+}
+}
+vector<int> res;
+for (int i = 0; i < maxlen; ++i) {
+	res.push_back(startnum+i);
+}
+return res;
+}
+
+
+// curlen is the length until matrix[x][y]
+int dfs(vector<vector<int>>& matrix, vector<vector<int>>& len, int x, int y) {
+	int nrow = matrix.size();
+	int ncol = matrix[0].size();
+	// has left nb
+	if (x > 0) {
+		if (matrix[x-1][y] == matrix[x][y] + 1) {
+			if (len[x-1][y] == -1) {
+				int temp = dfs(matrix, len, x-1, y);
+				len[x][y] = max(len[x][y], temp + 1);							return len[x][y];
+}
+else {
+	len[x][y] = max(len[x][y], len[x-1][y] + 1);
+				return len[x][y];
+}
+}
+}
+if (x > 0) {
+		if (matrix[x-1][y] == matrix[x][y] + 1) {
+			if (len[x-1][y] == -1) {
+				int temp = dfs(matrix, len, x-1, y, maxlen, curlen+1);
+				len[x][y] = max(len[x][y], temp + 1);
+				maxlen = max(maxlen, len[x][y]);
+				return len[x][y];
+}
+else {
+	len[x][y] = max(len[x][y], len[x-1][y] + 1);
+maxlen = max(maxlen, len[x][y]);
+				return len[x][y];
+}
+}
+}
+
+
+len[x][y] = max(len[x][y], 1);
+
+
+}
+
