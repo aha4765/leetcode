@@ -1,0 +1,171 @@
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=213056&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D6%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+1. 罗马字母转数字
+See leetcode
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=214501&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D6%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+see leetcode
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=212201&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%255B3090%255D%255Bvalue%255D%3D2%26searchoption%255B3090%255D%255Btype%255D%3Dradio%26searchoption%255B3046%255D%255Bvalue%255D%3D6%26searchoption%255B3046%255D%255Btype%255D%3Dradio&page=1
+
+Union & Intersect Two Sorted Array (Non Leetcode)
+For example, if the input arrays are:
+
+arr1[] = {1, 3, 4, 5, 7}
+
+arr2[] = {2, 3, 5, 6}
+
+Then your program should print Union as {1, 2, 3, 4, 5, 6, 7} and Intersection as {3, 5}.
+
+vector<int> unioninter(vector<int>& num1, vector<int>& num2) {
+  int ptr1 = 0, ptr2 = 0;
+  int N1 = num1.size(), N2 = num2.size();
+  vector<int> union, inter;
+  
+  while (ptr1 < N1 && ptr2 < N2) {
+    if (num1[ptr1] == num2[ptr2]) {
+      inter.push_back(num1[ptr1]);
+      union.push_back(num1[ptr1]);
+      ptr1++;
+      ptr2++;
+    }
+    else if (num1[ptr1] < num2[ptr2]) {
+      union.push_back(num1[ptr1]);
+      ptr1++;
+    }
+    else {
+      union.push_back(num2[ptr2]);
+      ptr2++;
+    }
+  }
+  while (ptr1 < N1) {
+    union.push_back(num1[ptr1++]);
+  }
+  while (ptr2 < N2) {
+    union.push_back(num2[ptr2++]);
+  }
+  
+  return;
+}
+
+相当于实现Microsoft里面的查找替换的功能，给一个string article, 一个string find,一个string replace,把文章里所有的find都替换成replace，例如abcdbc把bc换成e ---->aede。
+
+string replace(string s, string f, string r) {
+  string res;
+  int pos = 0;
+  int fpos = 0;
+  while (pos < s.size()) {
+    fpos = s.find(f, pos);
+    if (fpos == string:npos) {
+      res += s.substr(pos, s.size()-pos);
+      break;
+    }
+    res += s.substr(pos, fpos-pos);
+    res += r;
+    pos = fpos + f.size();
+  }
+  return res;
+}
+
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=213211&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3090%5D%5Bvalue%5D%3D2%26searchoption%5B3090%5D%5Btype%5D%3Dradio%26searchoption%5B3046%5D%5Bvalue%5D%3D6%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+[LeetCode] Nested List Weight Sum 嵌套链表权重和
+ 
+
+Given a nested list of integers, return the sum of all integers in the list weighted by their depth.
+
+Each element is either an integer, or a list -- whose elements may also be integers or other lists.
+
+Example 1:
+Given the list [[1,1],2,[1,1]], return 10. (four 1's at depth 2, one 2 at depth 1)
+
+Example 2:
+Given the list [1,[4,[6]]], return 27. (one 1 at depth 1, one 4 at depth 2, and one 6 at depth 3; 1 + 4*2 + 6*3 = 27)
+
+struct NestesInteger {
+  NestedInteger* data;
+  int size;
+};
+
+isInteger()
+getInteger()
+getList()
+
+int sumup(vector<NestedInteger>& arr) {
+  return help(arr, 1);
+}
+
+int help(vector<NestedInteger>& arr, int depth) {
+  int sum = 0;
+  for (auto temp : arr) {
+    if (temp.isInteger()) {
+      sum += temp.getInteger()*depth;
+    }
+    else {
+      sum += help(temp.getList(), depth+1);
+    }
+  }
+  return sum;
+}
+
+
+Leetcode: Factor Combinations
+Numbers can be regarded as product of its factors. For example,
+8 = 2 x 2 x 2;
+  = 2 x 4.
+Write a function that takes an integer n and return all possible combinations of its factors.
+Note: 
+Each combination's factors must be sorted ascending, for example: The factors of 2 and 6 is [2, 6], not [6, 2].
+You may assume that n is always positive.
+Factors should be greater than 1 and less than n.
+Examples: 
+input: 1
+output: 
+[]
+input: 37
+output: 
+[]
+input: 12
+output:
+[
+  [2, 6],
+  [2, 2, 3],
+  [3, 4]
+]
+input: 32
+output:
+[
+  [2, 16],
+  [2, 2, 8],
+  [2, 2, 2, 4],
+  [2, 2, 2, 2, 2],
+  [2, 4, 4],
+  [4, 8]
+]
+
+vector<vector<int>> factor(int N) {
+  vector<vector<int>> res;
+  vector<int> cur;
+  bt(res, cur, N);
+  return res;
+}
+
+void bt(vector<vector<int>>& res, vector<int>& cur, int curval) {
+  if (curval == 1) {
+    if (cur.size() != 1) {
+      res.push_back(cur);
+    }
+    return;
+  }
+  int start = cur.empty() ? 2 : cur.back();
+  if (curval < start) return;
+  for (int i = start; i <= curval; ++i) {
+    if (curval%i == 0) {
+      cur.push_back(i);
+      bt(res, cur, curval/i);
+      cur.pop_back();
+    }
+  }
+  return;
+}
