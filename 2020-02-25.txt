@@ -1,0 +1,5 @@
+To put more attention after I have the time/mood:
+1. sliding window, two pointers https://leetcode.com/problems/max-consecutive-ones-iii/
+2. DP
+3. Backtracking
+4. Array, associate with stack
